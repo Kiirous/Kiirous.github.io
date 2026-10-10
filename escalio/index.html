@@ -4,59 +4,628 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Escalio - Plantões e Ganhos</title>
-  <meta name="description" content="Escalio: registre seus plantões e saiba quanto faturou no mês. Funciona sem conta.">
+  <meta name="description" content="Escalio: registre seus plantões em segundos e saiba quanto faturou, recebeu e ainda tem a receber no mês. Funciona sem conta.">
+  <meta name="theme-color" content="#1C2E4E">
+  <meta property="og:title" content="Escalio - Plantões e Ganhos">
+  <meta property="og:description" content="Registre seus plantões e saiba quanto faturou no mês. Funciona sem conta.">
+  <meta property="og:image" content="https://kiirous.github.io/escalio/icon.png">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --navy: #1C2E4E;
+      --navy-deep: #13213A;
+      --navy-soft: #2A4068;
       --green: #23A57C;
+      --green-bright: #2FC194;
+      --green-soft: #E6F5EF;
+      --amber: #D99A1E;
+      --amber-soft: #FBF1DC;
       --background: #F5F6F8;
       --surface: #FFFFFF;
-      --text-secondary: #4B5563;
+      --text: #1C2E4E;
+      --text-secondary: #5B6577;
       --border: #E5E7EB;
+      --on-navy: #FFFFFF;
+      --on-navy-muted: rgba(255, 255, 255, .72);
+      --radius: 20px;
+      --shadow: 0 1px 2px rgba(19, 33, 58, .04), 0 12px 32px rgba(19, 33, 58, .08);
     }
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       margin: 0;
+      font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background: var(--background);
-      color: var(--navy);
-      min-height: 100vh;
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+    /* ---------- Topo ---------- */
+    .hero {
+      position: relative;
+      background:
+        radial-gradient(900px 500px at 85% 10%, rgba(35, 165, 124, .28), transparent 60%),
+        radial-gradient(700px 500px at 0% 100%, rgba(42, 64, 104, .9), transparent 70%),
+        var(--navy);
+      color: var(--on-navy);
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 80px;
+      background: linear-gradient(to bottom, transparent, rgba(19, 33, 58, .35));
+      pointer-events: none;
+    }
+    nav {
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 24px 16px;
+      justify-content: space-between;
+      padding: 22px 0;
     }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 32px 24px;
-      max-width: 440px;
-      width: 100%;
-      text-align: center;
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 800; font-size: 22px; letter-spacing: -.02em; }
+    .brand img { width: 40px; height: 40px; border-radius: 11px; box-shadow: 0 0 0 1px rgba(255, 255, 255, .14); }
+    .nav-links { display: flex; gap: 28px; font-size: 15px; font-weight: 500; }
+    .nav-links a { text-decoration: none; color: var(--on-navy-muted); transition: color .2s; }
+    .nav-links a:hover { color: var(--on-navy); }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 48px;
+      align-items: center;
+      padding: 56px 0 96px;
     }
-    h1 { margin: 0 0 6px; font-size: 30px; }
-    p { color: var(--text-secondary); line-height: 1.6; margin: 0 0 24px; }
-    a.button {
-      display: block;
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .02em;
+      color: var(--green-bright);
+      background: rgba(35, 165, 124, .14);
+      border: 1px solid rgba(47, 193, 148, .3);
+      padding: 6px 14px;
+      border-radius: 999px;
+    }
+    .eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green-bright); }
+    h1 {
+      font-size: clamp(34px, 5vw, 56px);
+      line-height: 1.06;
+      letter-spacing: -.035em;
+      font-weight: 800;
+      margin: 22px 0 20px;
+      text-wrap: balance;
+    }
+    h1 em { font-style: normal; color: var(--green-bright); }
+    .lead { font-size: clamp(17px, 1.6vw, 19px); color: var(--on-navy-muted); max-width: 520px; margin: 0 0 34px; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+    .store-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #000;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, .22);
+      border-radius: 14px;
+      padding: 10px 20px 10px 16px;
+      text-decoration: none;
+      line-height: 1.15;
+    }
+    .store-badge svg { width: 26px; height: 26px; flex: none; }
+    .store-badge small { display: block; font-size: 11px; opacity: .8; letter-spacing: .02em; }
+    .store-badge strong { font-size: 18px; font-weight: 600; }
+    .ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 20px;
+      border-radius: 14px;
       text-decoration: none;
       font-weight: 600;
-      padding: 14px;
-      border-radius: 12px;
-      margin-bottom: 12px;
-      border: 1px solid var(--border);
-      color: var(--navy);
+      color: var(--on-navy);
+      border: 1px solid rgba(255, 255, 255, .22);
+      transition: background .2s;
     }
-    a.button:hover { border-color: var(--green); color: var(--green); }
+    .ghost:hover { background: rgba(255, 255, 255, .08); }
+    .trust { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 30px; font-size: 14px; color: var(--on-navy-muted); }
+    .trust span { display: inline-flex; align-items: center; gap: 8px; }
+    .trust svg { width: 16px; height: 16px; color: var(--green-bright); }
+
+    /* ---------- Celular ---------- */
+    .phone-stage { position: relative; display: flex; justify-content: center; }
+    .phone-stage::before {
+      content: "";
+      position: absolute;
+      width: 420px; height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(35, 165, 124, .35), transparent 65%);
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      filter: blur(10px);
+    }
+    .phone {
+      position: relative;
+      width: 300px;
+      border-radius: 44px;
+      padding: 12px;
+      background: linear-gradient(160deg, #3A4B6B, #0E1829);
+      box-shadow: 0 40px 80px rgba(5, 12, 26, .55), inset 0 0 0 1px rgba(255, 255, 255, .08);
+      transform: rotate(-2deg);
+    }
+    .screen { background: var(--background); border-radius: 34px; overflow: hidden; color: var(--text); text-align: left; }
+    .screen-top { background: var(--navy); color: #fff; padding: 18px 18px 54px; }
+    .status { display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; opacity: .85; margin-bottom: 16px; }
+    .screen-top .month { font-size: 12px; opacity: .7; }
+    .screen-top .hello { font-size: 17px; font-weight: 700; }
+    .summary-card {
+      margin: -40px 14px 0;
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    .summary-card .label { font-size: 11px; color: var(--text-secondary); font-weight: 500; }
+    .summary-card .total { font-size: 26px; font-weight: 800; letter-spacing: -.02em; margin: 2px 0 12px; }
+    .summary-card .total small { font-size: 15px; font-weight: 700; }
+    .bar { height: 8px; border-radius: 99px; background: var(--amber-soft); overflow: hidden; margin-bottom: 10px; }
+    .bar i { display: block; height: 100%; width: 72%; background: var(--green); border-radius: 99px; }
+    .split { display: flex; justify-content: space-between; font-size: 11px; }
+    .split b { display: block; font-size: 13px; }
+    .split .ok b { color: var(--green); }
+    .split .wait { text-align: right; }
+    .split .wait b { color: var(--amber); }
+    .list { padding: 14px 14px 76px; display: grid; gap: 8px; }
+    .list h4 { margin: 4px 2px 2px; font-size: 12px; color: var(--text-secondary); font-weight: 600; }
+    .item { min-width: 0; display: flex; align-items: center; gap: 10px; background: var(--surface); border-radius: 14px; padding: 10px 12px; }
+    .dot { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-size: 11px; font-weight: 700; color: #fff; flex: none; }
+    .item .info { flex: 1; min-width: 0; }
+    .item .info b { display: block; font-size: 12.5px; }
+    .item .info b, .item .info span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item .info span { display: block; font-size: 11px; color: var(--text-secondary); }
+    .item .val { text-align: right; font-size: 12.5px; font-weight: 700; white-space: nowrap; }
+    .chip { display: inline-block; font-size: 9.5px; font-weight: 700; padding: 2px 7px; border-radius: 99px; margin-top: 2px; }
+    .chip.ok { background: var(--green-soft); color: var(--green); }
+    .chip.wait { background: var(--amber-soft); color: var(--amber); }
+    .fab {
+      position: absolute; right: 30px; bottom: 30px;
+      width: 50px; height: 50px; border-radius: 16px;
+      background: var(--green); color: #fff;
+      display: grid; place-items: center; font-size: 28px; font-weight: 400;
+      box-shadow: 0 10px 24px rgba(35, 165, 124, .5);
+    }
+
+    /* ---------- Seções ---------- */
+    section { padding: 96px 0; }
+    .section-head { max-width: 640px; margin: 0 auto 56px; text-align: center; }
+    .kicker { font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--green); }
+    h2 { font-size: clamp(28px, 3.6vw, 42px); line-height: 1.15; letter-spacing: -.03em; margin: 12px 0 14px; font-weight: 800; }
+    .section-head p { color: var(--text-secondary); font-size: 17px; margin: 0; }
+
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .feature {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: transform .25s, box-shadow .25s, border-color .25s;
+    }
+    .feature:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: transparent; }
+    .icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: grid; place-items: center;
+      background: var(--green-soft); color: var(--green);
+      margin-bottom: 18px;
+    }
+    .icon svg { width: 24px; height: 24px; }
+    .feature h3 { font-size: 18px; margin: 0 0 8px; letter-spacing: -.01em; }
+    .feature p { margin: 0; color: var(--text-secondary); font-size: 15px; }
+
+    .steps-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; counter-reset: step; }
+    .step { position: relative; padding-top: 64px; }
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute; top: 0; left: 0;
+      width: 44px; height: 44px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--navy); color: #fff; font-weight: 800; font-size: 18px;
+    }
+    .step:not(:last-child)::after {
+      content: "";
+      position: absolute; top: 22px; left: 60px; right: -12px;
+      border-top: 2px dashed var(--border);
+    }
+    .step h3 { font-size: 19px; margin: 0 0 8px; }
+    .step p { margin: 0; color: var(--text-secondary); }
+
+    .privacy {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      background: linear-gradient(135deg, var(--navy), var(--navy-soft));
+      color: var(--on-navy);
+      border-radius: 32px;
+      padding: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .privacy::before {
+      content: "";
+      position: absolute; right: -120px; top: -120px;
+      width: 360px; height: 360px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(35, 165, 124, .35), transparent 65%);
+    }
+    .privacy .kicker { color: var(--green-bright); }
+    .privacy h2 { margin-top: 12px; }
+    .privacy p { color: var(--on-navy-muted); font-size: 17px; margin: 0; }
+    .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; position: relative; }
+    .checks li {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: 16px;
+      padding: 16px 18px;
+    }
+    .checks svg { width: 22px; height: 22px; color: var(--green-bright); flex: none; margin-top: 2px; }
+    .checks b { display: block; }
+    .checks span { color: var(--on-navy-muted); font-size: 15px; }
+
+    .premium { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 880px; margin: 0 auto; }
+    .plan { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
+    .plan.highlight { border: 2px solid var(--green); box-shadow: var(--shadow); }
+    .plan h3 { margin: 0 0 4px; font-size: 22px; }
+    .plan .sub { color: var(--text-secondary); margin: 0 0 22px; }
+    .plan ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+    .plan li { display: flex; gap: 10px; font-size: 15px; }
+    .plan li svg { width: 20px; height: 20px; color: var(--green); flex: none; margin-top: 1px; }
+    .tag { display: inline-block; font-size: 12px; font-weight: 700; color: var(--green); background: var(--green-soft); padding: 4px 10px; border-radius: 99px; margin-bottom: 12px; }
+
+    .faq { max-width: 760px; margin: 0 auto; display: grid; gap: 12px; }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 0 22px; }
+    summary {
+      cursor: pointer; list-style: none;
+      font-weight: 700; font-size: 17px;
+      padding: 20px 0;
+      display: flex; justify-content: space-between; gap: 16px; align-items: center;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; font-size: 24px; font-weight: 400; color: var(--green); transition: transform .2s; }
+    details[open] summary::after { transform: rotate(45deg); }
+    details p { margin: 0 0 20px; color: var(--text-secondary); }
+
+    .final { text-align: center; padding: 0 0 96px; }
+    .final-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      padding: 64px 24px;
+    }
+    .final-card img { width: 72px; height: 72px; border-radius: 20px; margin-bottom: 18px; box-shadow: var(--shadow); }
+    .final-card h2 { margin-top: 0; }
+    .final-card p { color: var(--text-secondary); font-size: 17px; margin: 0 auto 28px; max-width: 480px; }
+
+    footer { background: var(--navy-deep); color: var(--on-navy-muted); padding: 40px 0; font-size: 14px; }
+    .foot { display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: center; }
+    .foot .brand { font-size: 18px; color: var(--on-navy); }
+    .foot .brand img { width: 30px; height: 30px; border-radius: 8px; }
+    .foot-links { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+    .foot-links a { text-decoration: none; }
+    .foot-links a:hover { color: var(--on-navy); }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .feature { transition: none; }
+    }
+
+    @media (max-width: 960px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 56px; padding: 32px 0 80px; text-align: center; }
+      .lead { margin-left: auto; margin-right: auto; }
+      .cta-row, .trust { justify-content: center; }
+      .features { grid-template-columns: repeat(2, 1fr); }
+      .privacy { grid-template-columns: 1fr; padding: 44px 28px; gap: 32px; }
+    }
+    @media (max-width: 680px) {
+      .nav-links { display: none; }
+      section { padding: 72px 0; }
+      .features, .steps, .premium { grid-template-columns: 1fr; }
+      .step:not(:last-child)::after { display: none; }
+      .phone { width: 270px; }
+      .phone-stage::before { width: 320px; height: 320px; }
+      .privacy { border-radius: 24px; }
+      .final-card { padding: 48px 20px; border-radius: 24px; }
+      .foot { flex-direction: column; text-align: center; }
+      .foot-links { justify-content: center; }
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Escalio</h1>
-    <p>Registre seus plantões e saiba quanto faturou no mês. Funciona sem conta: a conta é só o seu backup.</p>
-    <a class="button" href="termos-de-uso.html">Termos de Uso</a>
-    <a class="button" href="politica-de-privacidade.html">Política de Privacidade</a>
-    <a class="button" href="excluir-conta.html">Excluir conta e dados</a>
-  </div>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  </svg>
+
+  <header class="hero">
+    <div class="wrap">
+      <nav>
+        <a class="brand" href="#"><img src="icon.png" alt="">Escalio</a>
+        <div class="nav-links">
+          <a href="#recursos">Recursos</a>
+          <a href="#como-funciona">Como funciona</a>
+          <a href="#privacidade">Privacidade</a>
+          <a href="#duvidas">Dúvidas</a>
+        </div>
+      </nav>
+
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow">Para plantonistas e profissionais MEI</span>
+          <h1>Seus plantões e <em>quanto você faturou</em>, num lugar só.</h1>
+          <p class="lead">Registre cada plantão em segundos e saiba, a qualquer momento, quanto faturou no mês, quanto já recebeu e quanto ainda falta cair na conta.</p>
+          <div class="cta-row">
+            <!-- Quando o app for público, trocar por:
+                 <a class="store-badge" href="https://play.google.com/store/apps/details?id=br.com.escalio.app"> -->
+            <span class="store-badge" aria-label="Em breve na Google Play">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#34A853" d="M3.6 1.8 13.4 11.6 3.6 21.4c-.3-.2-.5-.6-.5-1V2.8c0-.4.2-.8.5-1z"/><path fill="#FBBC04" d="m16.7 14.9-3.3-3.3 3.3-3.3 3.9 2.2c1.1.6 1.1 1.6 0 2.2z"/><path fill="#EA4335" d="M16.7 14.9 13.4 11.6 3.6 21.4c.4.4 1 .4 1.7 0z"/><path fill="#4285F4" d="M16.7 8.3 5.3 1.8c-.7-.4-1.3-.4-1.7 0l9.8 9.8z"/></svg>
+              <span><small>EM BREVE NA</small><strong>Google Play</strong></span>
+            </span>
+            <a class="ghost" href="#recursos">Ver recursos →</a>
+          </div>
+          <div class="trust">
+            <span><svg><use href="#i-check"/></svg>Funciona sem criar conta</span>
+            <span><svg><use href="#i-check"/></svg>Funciona sem internet</span>
+            <span><svg><use href="#i-check"/></svg>Backup grátis</span>
+          </div>
+        </div>
+
+        <div class="phone-stage" aria-hidden="true">
+          <div class="phone">
+            <div class="screen">
+              <div class="screen-top">
+                <div class="status"><span>9:41</span><span>●●● ▮</span></div>
+                <div class="month">Outubro de 2026</div>
+                <div class="hello">Resumo do mês</div>
+              </div>
+              <div class="summary-card">
+                <div class="label">Faturado no mês</div>
+                <div class="total"><small>R$</small> 14.850,00</div>
+                <div class="bar"><i></i></div>
+                <div class="split">
+                  <div class="ok">Recebido<b>R$ 10.692,00</b></div>
+                  <div class="wait">A receber<b>R$ 4.158,00</b></div>
+                </div>
+              </div>
+              <div class="list">
+                <h4>Últimos registros</h4>
+                <div class="item">
+                  <div class="dot" style="background:#1C2E4E">12h</div>
+                  <div class="info"><b>Plantão noturno</b><span>Hospital Central · 19h–7h</span></div>
+                  <div class="val">R$ 1.650<br><span class="chip wait">A receber</span></div>
+                </div>
+                <div class="item">
+                  <div class="dot" style="background:#23A57C">12h</div>
+                  <div class="info"><b>Plantão diurno</b><span>UPA Norte · 7h–19h</span></div>
+                  <div class="val">R$ 1.400<br><span class="chip ok">Recebido</span></div>
+                </div>
+                <div class="item">
+                  <div class="dot" style="background:#7C5CD6">6h</div>
+                  <div class="info"><b>Consultas</b><span>Clínica Vida · 13h–19h</span></div>
+                  <div class="val">R$ 900<br><span class="chip ok">Recebido</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="fab">+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="recursos">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="kicker">Recursos</span>
+          <h2>Tudo o que você precisa para não perder nenhum valor de vista</h2>
+          <p>Feito para quem dá plantão em vários lugares e precisa saber exatamente o que entrou e o que ainda falta receber.</p>
+        </div>
+        <div class="features">
+          <article class="feature reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+            <h3>Registro em segundos</h3>
+            <p>Data, horário, valor e local. Atalhos para jornadas de 12h diurno, 12h noturno e 6h.</p>
+          </article>
+          <article class="feature reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></div>
+            <h3>Total do mês na hora</h3>
+            <p>Faturado, recebido, a receber, número de plantões e horas trabalhadas, sempre atualizados.</p>
+          </article>
+          <article class="feature reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/><path d="M8 15h2M14 15h2"/></svg></div>
+            <h3>Escalas recorrentes</h3>
+            <p>12x36, 24x48, semanal ou dias da semana: lance a escala inteira de uma vez.</p>
+          </article>
+          <article class="feature reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></div>
+            <h3>Locais com valor combinado</h3>
+            <p>Cadastre cada hospital ou clínica com a regra de pagamento e seja avisado se o valor não bater.</p>
+          </article>
+          <article class="feature reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="15" rx="3"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg></div>
+            <h3>Comprovantes guardados</h3>
+            <p>Fotografe o comprovante e anexe ao plantão. Ele fica salvo no seu aparelho.</p>
+          </article>
+          <article class="feature reveal">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
+            <h3>Lembrete diário</h3>
+            <p>Um aviso no horário que você escolher para não esquecer de registrar o plantão do dia.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="como-funciona" class="steps-section">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="kicker">Como funciona</span>
+          <h2>Comece a usar em menos de um minuto</h2>
+          <p>Sem cadastro obrigatório, sem configuração complicada.</p>
+        </div>
+        <div class="steps">
+          <div class="step reveal">
+            <h3>Baixe e abra</h3>
+            <p>Toque em "Continuar sem conta" e o app já está pronto para usar.</p>
+          </div>
+          <div class="step reveal">
+            <h3>Registre seus plantões</h3>
+            <p>A cada plantão, informe horário, valor e se já recebeu. Ou lance a escala do mês de uma vez.</p>
+          </div>
+          <div class="step reveal">
+            <h3>Acompanhe o mês</h3>
+            <p>Veja o total faturado, o que já entrou e o que falta cobrar, por local e por tipo de serviço.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="privacidade">
+      <div class="wrap">
+        <div class="privacy reveal">
+          <div>
+            <span class="kicker">Seus dados, suas regras</span>
+            <h2>Os dados ficam no seu celular. A conta serve só para o backup.</h2>
+            <p>O Escalio foi pensado para funcionar sem login. Se quiser trocar de aparelho sem perder nada, crie uma conta gratuita e seus registros ganham cópia de segurança na nuvem.</p>
+          </div>
+          <ul class="checks">
+            <li><svg><use href="#i-check"/></svg><div><b>Funciona 100% offline</b><span>Registre plantões mesmo sem sinal, dentro do hospital.</span></div></li>
+            <li><svg><use href="#i-check"/></svg><div><b>Backup e sincronização grátis</b><span>Com conta, seus dados acompanham você em qualquer aparelho.</span></div></li>
+            <li><svg><use href="#i-check"/></svg><div><b>Sem anúncios</b><span>Seus dados não são vendidos nem usados para propaganda.</span></div></li>
+            <li><svg><use href="#i-check"/></svg><div><b>Exclusão quando quiser</b><span>Apague a conta e o backup pelo app, a qualquer momento.</span></div></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="planos" style="padding-top:0">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="kicker">Planos</span>
+          <h2>Grátis para o dia a dia. Premium para ir além.</h2>
+          <p>O essencial é gratuito para sempre. O Premium traz análises e relatórios para quem quer enxergar mais longe.</p>
+        </div>
+        <div class="premium">
+          <div class="plan reveal">
+            <h3>Gratuito</h3>
+            <p class="sub">Tudo para registrar e acompanhar o mês.</p>
+            <ul>
+              <li><svg><use href="#i-check"/></svg>Registros e locais ilimitados</li>
+              <li><svg><use href="#i-check"/></svg>Resumo do mês: faturado, recebido e a receber</li>
+              <li><svg><use href="#i-check"/></svg>Escalas recorrentes e comprovantes</li>
+              <li><svg><use href="#i-check"/></svg>Backup na nuvem com conta grátis</li>
+            </ul>
+          </div>
+          <div class="plan highlight reveal">
+            <span class="tag">Premium</span>
+            <h3>Análises e relatórios</h3>
+            <p class="sub">Para quem quer entender e planejar os ganhos.</p>
+            <ul>
+              <li><svg><use href="#i-check"/></svg>Evolução do faturamento mês a mês</li>
+              <li><svg><use href="#i-check"/></svg>Melhor turno e valor por hora</li>
+              <li><svg><use href="#i-check"/></svg>Faturamento por tipo de serviço</li>
+              <li><svg><use href="#i-check"/></svg>Exportação em PDF e planilha (CSV)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="duvidas" class="steps-section">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="kicker">Dúvidas</span>
+          <h2>Perguntas frequentes</h2>
+        </div>
+        <div class="faq">
+          <details class="reveal">
+            <summary>Preciso criar uma conta para usar?</summary>
+            <p>Não. O Escalio funciona completo sem conta, salvando tudo no seu aparelho. A conta é opcional e serve para fazer backup e usar os mesmos dados em outro celular.</p>
+          </details>
+          <details class="reveal">
+            <summary>Para quem é o Escalio?</summary>
+            <p>Para plantonistas e profissionais autônomos ou MEI que trabalham em vários lugares e querem controlar quanto faturaram e quanto ainda têm a receber: médicos, enfermeiros, técnicos, fisioterapeutas, psicólogos e outros.</p>
+          </details>
+          <details class="reveal">
+            <summary>Funciona sem internet?</summary>
+            <p>Sim. Tudo é salvo no aparelho primeiro. Quando houver conexão e você estiver com a conta conectada, o backup é feito automaticamente.</p>
+          </details>
+          <details class="reveal">
+            <summary>Se eu trocar de celular, perco meus registros?</summary>
+            <p>Não, se você tiver uma conta. Basta entrar com ela no aparelho novo e seus registros e locais voltam.</p>
+          </details>
+          <details class="reveal">
+            <summary>Como excluo minha conta e meus dados?</summary>
+            <p>Pelo próprio app, em Perfil → Excluir conta, ou seguindo as instruções da página <a href="excluir-conta.html">Excluir conta e dados</a>.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="final" style="padding-top:96px">
+      <div class="wrap">
+        <div class="final-card reveal">
+          <img src="icon.png" alt="Ícone do Escalio">
+          <h2>Pare de anotar plantão em papel e planilha</h2>
+          <p>Em breve na Google Play. Seus ganhos organizados, do primeiro plantão ao fechamento do mês.</p>
+          <span class="store-badge" aria-label="Em breve na Google Play">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#34A853" d="M3.6 1.8 13.4 11.6 3.6 21.4c-.3-.2-.5-.6-.5-1V2.8c0-.4.2-.8.5-1z"/><path fill="#FBBC04" d="m16.7 14.9-3.3-3.3 3.3-3.3 3.9 2.2c1.1.6 1.1 1.6 0 2.2z"/><path fill="#EA4335" d="M16.7 14.9 13.4 11.6 3.6 21.4c.4.4 1 .4 1.7 0z"/><path fill="#4285F4" d="M16.7 8.3 5.3 1.8c-.7-.4-1.3-.4-1.7 0l9.8 9.8z"/></svg>
+            <span><small>EM BREVE NA</small><strong>Google Play</strong></span>
+          </span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <a class="brand" href="#"><img src="icon.png" alt="">Escalio</a>
+      <div class="foot-links">
+        <a href="termos-de-uso.html">Termos de Uso</a>
+        <a href="politica-de-privacidade.html">Política de Privacidade</a>
+        <a href="excluir-conta.html">Excluir conta e dados</a>
+      </div>
+      <div>© 2026 Escalio</div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var items = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        items.forEach(function (el) { el.classList.add('in'); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12 });
+      items.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
 </body>
 </html>
